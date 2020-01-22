@@ -1,13 +1,15 @@
 package main
 
 import (
+	"github.com/rhizomata/bridge-chain-tendermint/node"
+	rpctypes "github.com/tendermint/tendermint/rpc/lib/types"
 	"os"
+	"time"
 	"path/filepath"
 
 	"github.com/tendermint/tendermint/libs/cli"
-
+	core "github.com/tendermint/tendermint/rpc/core"
 	cmd "github.com/rhizomata/bridge-chain-tendermint/cmd/commands"
-	nm "github.com/tendermint/tendermint/node"
 )
 
 const (
@@ -40,12 +42,20 @@ func main() {
 	//	* Provide their own DB implementation
 	// can copy this file and use something other than the
 	// DefaultNewNode function
-	nodeFunc := nm.DefaultNewNode
+	nodeFunc := node.NewKVApplicationNode
 
 	// Create & start node
 	rootCmd.AddCommand(cmd.NewRunNodeCmd(nodeFunc))
 
 	cmd := cli.PrepareBaseCmd(rootCmd, "TM", os.ExpandEnv(filepath.Join("./", DefaultBCDir)))
+
+
+	go func(){
+		time.Sleep(5*time.Second)
+
+		core.BroadcastTxCommit(&rpctypes.Context{}, []byte("test=test11111"))
+	}()
+
 	if err := cmd.Execute(); err != nil {
 		panic(err)
 	}
