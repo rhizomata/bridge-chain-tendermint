@@ -12,7 +12,13 @@ import (
 	"os"
 )
 
-func NewKVApplicationNode(config *cfg.Config, logger log.Logger) (*node.Node, error) {
+
+
+type KVApplicationNodeProvider struct{
+	App *app.KVStoreApplication
+}
+
+func (provider *KVApplicationNodeProvider)NewNode(config *cfg.Config, logger log.Logger) (*node.Node, error) {
 	// Generate node PrivKey
 	nodeKey, err := p2p.LoadOrGenNodeKey(config.NodeKeyFile())
 	if err != nil {
@@ -37,11 +43,11 @@ func NewKVApplicationNode(config *cfg.Config, logger log.Logger) (*node.Node, er
 	}
 
 	kvapp := app.NewKVStoreApplication( config.DBDir() )
-
+	provider.App = kvapp
 	return node.NewNode(config,
 		privval.LoadOrGenFilePV(newPrivValKey, newPrivValState),
 		nodeKey,
-		proxy.NewLocalClientCreator(kvapp),
+		proxy.NewLocalClientCreator(provider.App),
 		node.DefaultGenesisDocProviderFunc(config),
 		node.DefaultDBProvider,
 		node.DefaultMetricsProvider(config.Instrumentation),

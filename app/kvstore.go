@@ -68,7 +68,7 @@ func prefixKey(key []byte) []byte {
 
 type KVStoreApplication struct {
 	types.BaseApplication
-	db    *dbm.GoLevelDB
+	DB    *dbm.GoLevelDB
 	state State
 
 	// validator set
@@ -89,7 +89,7 @@ func NewKVStoreApplication(dbDir string) (kvapp *KVStoreApplication){
 
 	state := loadState(db)
 
-	return &KVStoreApplication{db:db,
+	return &KVStoreApplication{DB:db,
 		state:state,
 		valAddrToPubKeyMap: make(map[string]types.PubKey),
 		logger:             log.NewNopLogger(),
@@ -210,7 +210,7 @@ func (app *KVStoreApplication) DeliverTx(req abcitypes.RequestDeliverTx) abcityp
 		{
 			Type: "app",
 			Attributes: []kv.Pair{
-				{Key: []byte("creator"), Value: []byte("Cosmoshi Netowoko")},
+				//{Key: []byte("creator"), Value: []byte("Cosmoshi Netowoko")},
 				{Key: []byte("key"), Value: key},
 			},
 		},
