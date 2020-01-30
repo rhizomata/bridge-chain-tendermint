@@ -87,22 +87,22 @@ func main() {
 		
 	}()
 	
-	go func(){
-		time.Sleep(5*time.Second)
-		for i:=0;i<100;i++ {
-			time.Sleep(30*time.Millisecond)
-			iterator, _ := provider.App.DB.Iterator([]byte("kvPairKey:stest8"),[]byte("kvPairKey:stest999"))
-			for iterator.Valid() {
-				
-				fmt.Println(" ^^ DB.Iterator: key=", string(iterator.Key()), ", value=", string(iterator.Value()))
-				iterator.Next()
-			}
-			iterator.Close()
-			if i%7 ==0{
-				time.Sleep(300*time.Millisecond)
-			}
-		}
-	}()
+	//go func(){
+	//	time.Sleep(5*time.Second)
+	//	for i:=0;i<100;i++ {
+	//		time.Sleep(30*time.Millisecond)
+	//		iterator, _ := provider.App.DB.Iterator([]byte("kvPairKey:stest8"),[]byte("kvPairKey:stest999"))
+	//		for iterator.Valid() {
+	//
+	//			fmt.Println(" ^^ DB.Iterator: key=", string(iterator.Key()), ", value=", string(iterator.Value()))
+	//			iterator.Next()
+	//		}
+	//		iterator.Close()
+	//		if i%7 ==0{
+	//			time.Sleep(300*time.Millisecond)
+	//		}
+	//	}
+	//}()
 	
 	if err := cmd.Execute(); err != nil {
 		panic(err)
